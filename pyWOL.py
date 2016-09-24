@@ -1,7 +1,8 @@
 import os
 import wx
-from wakeonlan import wol
+import wx.lib.intctrl
 import subprocess
+from wakeonlan import wol
 
 class MainWindow(wx.Frame):
     def __init__(self, parent, title):
@@ -19,19 +20,18 @@ class MainWindow(wx.Frame):
         
         # Declare MAC address
         self.mactag = wx.StaticText(self, label="Server MAC Address: ", pos=(20, 55))
-        self.macAddress = wx.TextCtrl(self, -1, 'FF:FF:FF:FF:FF', pos=(160, 55), size=(120, 20))
+        self.macAddress = wx.TextCtrl(self, -1, '00:13:72:57:3b:70', pos=(160, 55), size=(120, 20))
         self.macAddress.SetToolTipString("MAC Address of targeted NIC")        
         
+        # Declare subnet
         self.subnettag = wx.StaticText(self, label="Subnet Mask: ", pos=(20, 80))
         self.subnetAddress = wx.TextCtrl(self, -1, '255.255.255.255', pos=(160, 80), size=(120, 20))
         self.subnetAddress.SetToolTipString("This is usually 255.255.255.255")
-
-        # Declare subnet
+        
         # Declare port
         self.porttag = wx.StaticText(self, label="Port: ", pos=(20, 105))
         self.Port = wx.TextCtrl(self, -1, '9', pos=(160, 105), size=(45, 20))
         self.Port.SetToolTipString("This is usually 9")
-        
         
         # Button to send packets
         self.wake = wx.Button(self, label="WAKE", pos=(300, 120))
@@ -65,7 +65,7 @@ class MainWindow(wx.Frame):
         mac = self.macAddress.GetValue()
         p = self.Port.GetValue()
         
-        test = subprocess.Popen(["/usr/local/bin/wol", mac])
+        sendpacket = subprocess.Popen(["/usr/local/bin/wol", mac, "-i", ip])
         
         dlg = wx.MessageDialog(self, "Magic packet sent", "WOL Operation Complete", wx.ICON_INFORMATION)
         dlg.ShowModal()
